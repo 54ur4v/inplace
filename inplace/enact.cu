@@ -268,4 +268,34 @@ void transpose(bool row_major, double* data, int m, int n) {
     transpose_fn(row_major, data, m, n);
 }
 
+namespace variants {
+
+  template<typename T>
+  void r2c_transpose(bool row_major, T* data, int m, int n)
+  { inplace::r2c::transpose(row_major, data, m, n); }
+
+  template<typename T>
+  void c2r_transpose(bool row_major, T* data, int m, int n)
+  { inplace::c2r::transpose(row_major, data, m, n); }
+
+  template<typename T>
+  void r2c_skinny_transpose(bool row_major,
+                            T* data, int m, int n) {
+    if(row_major)
+      std::swap(m, n);
+
+    inplace::detail::r2c::skinny_transpose(data, m, n);
+  }
+
+  template<typename T>
+  void c2r_skinny_transpose(bool row_major,
+                            T* data, int m, int n) {
+    if(!row_major)
+      std::swap(m, n);
+
+    inplace::detail::c2r::skinny_transpose(data, m, n);
+  }
+
+} // ns variants
+
 }
