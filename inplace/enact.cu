@@ -129,6 +129,14 @@ void sm_52_enact(float* data, int m, int n, F s) {
     }
 }
 
+template<typename F>
+void sm_20_enact(float* data, int m, int n, F s) {
+}
+
+template<typename F>
+void sm_20_enact(double* data, int m, int n, F s) {
+}
+
 template<typename T, typename F>
 void shuffle_fn(T* data, int m, int n, F s) {
     int arch = current_sm();
@@ -136,8 +144,10 @@ void shuffle_fn(T* data, int m, int n, F s) {
         sm_52_enact(data, m, n, s);
     } else if (arch >= 305) {
         sm_35_enact(data, m, n, s);
+    } else if (arch >= 200) {
+        sm_20_enact(data, m, n, s);
     } else {
-        throw std::invalid_argument("Requires sm_35 or greater");
+        throw std::invalid_argument("Requires sm_20 or greater");
     }
 }
 

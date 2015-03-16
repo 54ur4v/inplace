@@ -1,18 +1,18 @@
 #
 #   Copyright 2012      NVIDIA Corporation
-# 
+#
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
 #   You may obtain a copy of the License at
-# 
+#
 #       http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 #   Unless required by applicable law or agreed to in writing, software
 #   distributed under the License is distributed on an "AS IS" BASIS,
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-# 
+#
 #
 EnsureSConsVersion(1,2)
 
@@ -23,7 +23,7 @@ import platform
 
 def get_cuda_paths():
   """Determines CUDA {bin,lib,include} paths
-  
+
   returns (bin_path,lib_path,inc_path)
   """
 
@@ -38,7 +38,7 @@ def get_cuda_paths():
     inc_path = '/usr/local/cuda/include'
   else:
     raise ValueError, 'Error: unknown OS.  Where is nvcc installed?'
-  
+
   if platform.system() != 'Darwin' and platform.machine()[-2:] == '64':
     lib_path += '64'
 
@@ -100,7 +100,7 @@ def getCFLAGS(mode, backend, warn, warnings_as_errors, CC):
   # generate omp code
   if backend == 'omp':
     result.append(gCompilerOptions[CC]['omp'])
-  
+
   if warn:
     # turn on all warnings
     result.append(gCompilerOptions[CC]['warn_all'])
@@ -124,7 +124,7 @@ def getCXXFLAGS(mode, backend, warn, warnings_as_errors, CXX):
 
   # enable exception handling
   result.append(gCompilerOptions[CXX]['exception_handling'])
-  
+
   # generate omp code
   if backend == 'omp':
     result.append(gCompilerOptions[CXX]['omp'])
@@ -183,8 +183,8 @@ def Environment():
                         allowed_values = ('release', 'debug')))
 
   # add a variable to handle compute capability
-  vars.Add(EnumVariable('arch', 'Compute capability code generation', 'sm_35',
-                        allowed_values = ('sm_10', 'sm_11', 'sm_12', 'sm_13', 'sm_20', 'sm_21', 'sm_30', 'sm_35', 
+  vars.Add(EnumVariable('arch', 'Compute capability code generation', 'sm_20',
+                        allowed_values = ('sm_10', 'sm_11', 'sm_12', 'sm_13', 'sm_20', 'sm_21', 'sm_30', 'sm_35',
                                           'sm_37', 'sm_50', 'sm_52')))
 
   # add a variable to handle warnings
@@ -221,18 +221,18 @@ def Environment():
 
   # get linker switches
   env.Append(LINKFLAGS = getLINKFLAGS(env['mode'], env['backend'], env.subst('$LINK')))
-   
+
   # get CUDA paths
   (cuda_exe_path,cuda_lib_path,cuda_inc_path) = get_cuda_paths()
 
   cuda_found = cuda_exists(cuda_exe_path)
   if cuda_found:
-   
+
     env.Append(LIBPATH = [cuda_lib_path])
     env.Append(CPPPATH = [cuda_inc_path])
 
     env.Replace(CUDA_PATHS = (cuda_lib_path, cuda_inc_path))
-    
+
 
   if env['backend'] == 'ocelot':
     if os.name == 'posix':
@@ -267,6 +267,6 @@ def Environment():
   # enable Doxygen
   env.Tool('dox', toolpath = [os.path.join(thisDir)])
 
-  
+
   return env
 
