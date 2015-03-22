@@ -131,10 +131,12 @@ void sm_52_enact(float* data, int m, int n, F s) {
 
 template<typename F>
 void sm_20_enact(float* data, int m, int n, F s) {
+  assert(0 && "Not implemented")
 }
 
 template<typename F>
 void sm_20_enact(double* data, int m, int n, F s) {
+  assert(0 && "Not implemented")
 }
 
 template<typename T, typename F>
